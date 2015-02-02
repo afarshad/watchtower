@@ -12,6 +12,7 @@ remote_host = 'http://www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/BigBuckBunny/b
 
 @app.route('/<file_>.mpd', methods=['GET'])
 def request_for_mpd(file_):
+	print 'request for mpd'
 	if not file_available_locally(path_to_mpds, file_+'.mpd'):
 		get_file(file_+'.mpd')
 	manager.parse_mpd(path_to_mpds + file_+'.mpd')
@@ -19,6 +20,7 @@ def request_for_mpd(file_):
 
 @app.route('/<file_>.m4s', methods=['GET'])
 def request_for_m4s(file_):
+	print 'request for m4s'
 	obj = {'date': datetime.datetime.utcnow(), 'src-ip': request.remote_addr, 'request': file_ + '.m4s'}
 	manager.db_insert_get_request(obj)
 	
