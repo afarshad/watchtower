@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import threading
 import os
 import requests
@@ -19,7 +19,7 @@ def request_for_mpd(file_):
 
 @app.route('/<file_>.m4s', methods=['GET'])
 def request_for_m4s(file_):
-	obj = {'date': datetime.datetime.utcnow(),'request': file_ + '.m4s'}
+	obj = {'date': datetime.datetime.utcnow(), 'src-ip': request.remote_addr, 'request': file_ + '.m4s'}
 	manager.db_insert_get_request(obj)
 	
 def file_available_locally(path, file_):

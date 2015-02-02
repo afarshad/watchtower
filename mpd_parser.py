@@ -21,6 +21,8 @@ class Parser(object):
     max_seg_duration = 0
     max_bandwidth = 0
 
+    medy = {}
+
     def __init__(self, manifest):
         self.media['representations'] = list()
         self.media['initialisations'] = list()
@@ -71,6 +73,7 @@ class Parser(object):
     def parse_adaptation_set(self, base_url, parent_element):
         """Parse 'adaption set' level XML. Create a new template if present."""
         template = None
+        all_thingys = {}
         for child_element in parent_element:
             if 'BaseURL' in child_element.tag:
                 base_url.adaption_set = child_element.text
@@ -86,12 +89,15 @@ class Parser(object):
                 if template:
                     self.parse_templated_representation(template, base_url, child_element)
                 else:
-                    self.parse_representation(base_url, bandwidth, id_,
+                    thingy = self.parse_representation(base_url, bandwidth, id_,
                                           child_element)
+                all_thingys = dict(list(thingy.items()) + list(all_thingys.items()))
+        self.medy = all_thingys
         base_url.adaption_set = ''
 
     def parse_representation(self, base_url, bandwidth, id_, parent_element):
         """Parse 'representation' level XML without a template."""
+        thingy = {}
         for child_element in parent_element:
             if 'SegmentBase' in child_element.tag:
                 self.parse_segment_base(
@@ -104,12 +110,15 @@ class Parser(object):
             if 'SegmentList' in child_element.tag:
                 duration = int(child_element.attrib['duration'])
                 self._max_values(duration, bandwidth)
-                self.parse_segment_list(base_url=base_url,
+                segment_list = self.parse_segment_list(base_url=base_url,
                                         duration=duration,
                                         bandwidth=bandwidth,
                                         id_=id_,
                                         parent_element=child_element)
+                for segment in segment_list:
+                    thingy[segment] = parent_element.attrib
         base_url.representation = ''
+        return thingy
 
     def parse_segment_base(self, base_url, bandwidth, id_, parent_element):
         """
@@ -125,6 +134,7 @@ class Parser(object):
                 except KeyError:
                     media_range = (0, 0)
                 self.media['initialisations'].append(child_element.attrib['sourceURL'])
+                #return child_element.attrib['sourceURL']
 
     def parse_segment_list(self, **kwargs):
         """
@@ -134,6 +144,7 @@ class Parser(object):
 
         """
         queue = Queue.Queue()
+        segment_list = list()
         for child_element in kwargs['parent_element']:
             if 'SegmentURL' in child_element.tag:
                 try:
@@ -146,11 +157,10 @@ class Parser(object):
                            child_element.attrib['media'],
                            'bytes_from': int(media_range[0]),
                            'bytes_to': int(media_range[1])})
-                # print child_element.attrib['media']
-        # self.media['representations'].append({
-        #     'bandwidth': kwargs['bandwidth'],
-        #     'id': kwargs['id_'], 'queue': queue,
-        #     'maximum_encoded_bitrate': 0})
+                segment_list.append(child_element.attrib['media'])
+        return segment_list
+
+
 
     def _max_values(self, duration, bandwidth):
         """Find maximum values for duration and bandwidth in the MPD."""
