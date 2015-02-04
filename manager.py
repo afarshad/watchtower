@@ -7,8 +7,11 @@ db = connection['qoems']
 gets = db['get_requests']
 
 if __name__ == '__main__':
-	webserver = server.webserver_thread()
-	webserver.start()
+	sniffer = server.sniffing_thread()
+	sniffer.start()
+	
+	while(True):
+		pass
 
 def parse_mpd(file):
 	mpd = mpd_parser.Parser(file)
