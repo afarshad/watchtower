@@ -30,7 +30,7 @@ def cb(pkt):
                 if 'host: ' in h.lower():
                     host=h.split(":")[1].strip(" ").split("\r\n")[0]
         if get_found:
-            print 'URL:',host+str(get_found)
+            print 'URL:'str(get_found)
 
 def request_for_mpd(file_):
 	print 'request for mpd'
@@ -48,7 +48,6 @@ def file_available_locally(path, file_):
 
 class sniffing_thread(threading.Thread):
 	daemon = True
-	
 	def __init__(self):
 		threading.Thread.__init__(self)
 
