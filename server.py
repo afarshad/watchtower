@@ -40,9 +40,9 @@ def get_file_type(file_):
 
 def request_for_mpd(file_):
 	print 'request for mpd'
-	if not file_available_locally(path_to_mpds, file_+'.mpd'):
-		get_file(file_+'.mpd')
-	manager.parse_mpd(path_to_mpds + file_+'.mpd')
+	if not file_available_locally(path_to_mpds, file_):
+		get_file(file_)
+	manager.parse_mpd(path_to_mpds + file_)
 
 def request_for_m4s(file_):
 	print 'request for m4s'
