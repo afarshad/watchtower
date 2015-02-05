@@ -49,7 +49,7 @@ def get_file_type(file_):
 def request_for_mpd(host, full_path, file_):
 	if not file_available_locally(path_to_mpds, file_):
 		get_file(host + full_path)
-		manager.parse_mpd(path_to_mpds + file_)
+	manager.parse_mpd(path_to_mpds + file_)
 
 def get_file(url):
 	file_ = url.split('/')[-1]	
@@ -81,4 +81,4 @@ class sniffing_thread(threading.Thread):
 	def run(self):
 		sniff(filter='tcp port 80', prn=packet_capture, store=0)
 
-#handle_get_request('http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
+handle_get_request('0.0.0.0', 'http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')

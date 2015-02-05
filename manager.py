@@ -4,6 +4,7 @@ from pymongo import Connection
 
 connection = Connection('localhost', 27017)
 db = connection['qoems']
+mpd = {}
 gets = db['get_requests']
 
 if __name__ == '__main__':
@@ -14,8 +15,11 @@ if __name__ == '__main__':
 		pass
 
 def parse_mpd(file):
+	global mpd
 	mpd = mpd_parser.Parser(file)
-	# print mpd.medy
 
 def db_insert_get_request(obj):
-	gets.insert(obj)
+	key = obj['full_path']
+	key = key.slice('/')[-2] + '/' + key.slice('/')[-1]
+	new_obj = dict(obj.items() + mpd[key].items()) 
+	gets.insert(new_obj)
