@@ -19,7 +19,7 @@ def parse_mpd(file):
 	mpd = mpd_parser.Parser(file)
 
 def db_insert_get_request(obj):
-	key = obj['full_path']
-	key = key.slice('/')[-2] + '/' + key.slice('/')[-1]
-	new_obj = dict(obj.items() + mpd[key].items()) 
+	key = obj['path']
+	key = key.split('/')[-2] + '/' + key.split('/')[-1]
+	new_obj = dict(obj.items() + mpd.medy[key].items()) 
 	gets.insert(new_obj)
