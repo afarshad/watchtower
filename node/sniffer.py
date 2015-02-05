@@ -84,6 +84,6 @@ class sniffing_thread(threading.Thread):
 		sniff(filter='tcp port 80', prn=packet_capture, store=0)
 
 # handle_get_request('0.0.0.0', 'http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
-get_file('www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
-manager.parse_mpd(path_to_mpds + 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
-request_for_m4s('0.0.0.0', 'www.google.com', 'bunny_2s_50kbit/bunny_2s10.m4s', 'bunny_2s10.m4s')
+#get_file('www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
+#manager.parse_mpd(path_to_mpds + 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
+#request_for_m4s('0.0.0.0', 'www.google.com', 'bunny_2s_50kbit/bunny_2s10.m4s', 'bunny_2s10.m4s')
