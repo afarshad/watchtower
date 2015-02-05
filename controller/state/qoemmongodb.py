@@ -15,22 +15,22 @@ class State:
         """Object representing node details."""
 
         def __init__(self):
-            """Initialise node with sensible default details."""
+            """Initialise node with sensible default details: host IP address, port number and interface to listen to"""
             self.host = None
             self.port = None
+            self.iface= None
 
     class _Stat():
-
+        # TODO add other stat parameters for the node.
         def __init__(self):
             self.expr = None
             self.node_id = None
             self.status = None
-            self.cache_miss = None
-            self.cache_miss_size = None
-            self.cache_hit = None
-            self.cache_hit_size = None
-            self.cache_object = None
-            self.cache_object_size = None
+            self.number_rcvd_packets = None
+            self.number_rcvd_video_flows = None
+            self.rcvd_traffic_size = None
+            self.avg_cpu_util = None
+            self.avg_mem_util =None
 
     _client = None
     _database = None

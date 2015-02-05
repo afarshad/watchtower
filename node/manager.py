@@ -10,7 +10,6 @@ mpd = {}
 if __name__ == '__main__':
 	sniff = sniffer.sniffing_thread()
 	sniff.start()
-	
 	while(True):
 		pass
 
