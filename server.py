@@ -55,7 +55,7 @@ def get_file(url):
 	file_ = url.split('/')[-1]	
 
 	with open(path_to_mpds + file_, 'wb') as handle:
-		response = requests.get(url, verify=False, allow_redirects=True, stream=True)
+		response = requests.get('http://' + url, verify=False, allow_redirects=True, stream=True)
 
 		if not response.ok:
 			return
