@@ -1,11 +1,12 @@
 import server
 import mpd_parser
+from engine import Engine
 from pymongo import Connection
 
 connection = Connection('localhost', 27017)
 db = connection['qoems']
-mpd = {}
 gets = db['get_requests']
+mpd = {}
 
 if __name__ == '__main__':
 	sniffer = server.sniffing_thread()
