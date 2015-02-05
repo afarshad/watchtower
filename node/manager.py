@@ -1,5 +1,5 @@
 import mpd_parser
-import server
+import sniffer
 from pymongo import Connection
 
 connection = Connection('localhost', 27017)
@@ -8,8 +8,8 @@ gets = db['get_requests']
 mpd = {}
 
 if __name__ == '__main__':
-	sniffer = server.sniffing_thread()
-	sniffer.start()
+	sniff = sniffer.sniffing_thread()
+	sniff.start()
 	
 	while(True):
 		pass
