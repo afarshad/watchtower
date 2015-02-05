@@ -8,14 +8,13 @@ import manager
 from scapy.all import *
 
 path_to_mpds = 'mpds/'
-remote_host = 'http://www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/'
 
-def cb(pkt):
+def packet_capture(packet):
 	get_found=str()
 	host=str()
 
-	if pkt.haslayer(Raw):
-		load = pkt[Raw].load
+	if packet.haslayer(Raw):
+		load = packet[Raw].load
 		try:
 			headers, body = load.split(r"\r\n\r\n", 1)
 		except:
@@ -25,20 +24,21 @@ def cb(pkt):
 		for h in header_lines:
 			if 'get /' in h.lower():
 				get_found = h.split(' ')[1]
+				src_ip = packet[IP].src
 		if get_found:
 			for h in header_lines:
 				if 'host: ' in h.lower():
 					host = h.split(":")[1].strip(" ").split("\r\n")[0]
-			handle_get_request(host, get_found)
+			file_ = get_found.split('/')[-1]
+			handle_get_request(src_ip, host, get_found, file_)
 
-def handle_get_request(host, get):
-	get_split = get.split('/')
-	file_type = get_file_type(get_split[-1])
+def handle_get_request(src_ip, host, full_path, file_):
+	file_type = get_file_type(file_)
 
 	if file_type == '.mpd':
-		request_for_mpd(host, get, get_split[-1])
+		request_for_mpd(host, full_path, file_)
 	elif file_type == '.m4s':
-		pass
+		request_for_m4s(src_ip, host, full_path, file_)
 
 def get_file_type(file_):
 	if file_[-4:] == '.mpd':
@@ -47,8 +47,8 @@ def get_file_type(file_):
 		return '.m4s'
 
 def request_for_mpd(host, full_path, file_):
-	if not file_available_locally(path_to_mpds, file_):
-		get_file(host + full_path)
+	#if not file_available_locally(path_to_mpds, file_):
+	get_file(host + full_path)
 	manager.parse_mpd(path_to_mpds + file_)
 
 def get_file(url):
@@ -65,9 +65,9 @@ def get_file(url):
 				break
 			handle.write(block)
 
-def request_for_m4s(file_):
+def request_for_m4s(src_ip, host, full_path, file_):
 	print 'request for m4s'
-	obj = {'date': datetime.datetime.utcnow(), 'src-ip': request.remote_addr, 'request': file_ + '.m4s'}
+	obj = {'date': datetime.datetime.utcnow(), 'src-ip': src_ip, 'host': host, 'request': file_, 'path': full_path }
 	manager.db_insert_get_request(obj)
 
 def file_available_locally(path, file_):
@@ -79,6 +79,6 @@ class sniffing_thread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		sniff(filter='tcp port 80', prn=cb, store=0)
+		sniff(filter='tcp port 80', prn=packet_capture, store=0)
 
 #handle_get_request('http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
