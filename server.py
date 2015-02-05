@@ -79,6 +79,6 @@ class sniffing_thread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		sniff(filter='tcp port 80', prn=packet_capture, store=0)
+		sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
 
 handle_get_request('0.0.0.0', 'http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
