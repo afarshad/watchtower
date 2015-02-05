@@ -1,5 +1,6 @@
 import mpd_parser
 import sniffer
+from time import sleep
 from engine import MeasurementEngine
 from pymongo import Connection
 
@@ -11,11 +12,12 @@ engine = MeasurementEngine()
 mpd = {}
 
 if __name__ == '__main__':
+
 	sniff = sniffer.sniffing_thread()
 	sniff.start()
 	
 	while(True):
-		pass
+		sleep(0.1)
 
 def parse_mpd(file):
 	global mpd
