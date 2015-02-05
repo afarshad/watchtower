@@ -2,8 +2,8 @@ import threading
 import os
 import logging
 import requests
-import datetime
 import manager
+import calendar
 
 from scapy.all import *
 
@@ -67,7 +67,7 @@ def get_file(url):
 
 def request_for_m4s(src_ip, host, full_path, file_):
 	print 'request for m4s'
-	obj = {'date': datetime.datetime.utcnow(), 'src-ip': src_ip, 'host': host, 'request': file_, 'path': full_path }
+	obj = {'time': calendar.timegm(time.gmtime()), 'src-ip': src_ip, 'host': host, 'request': file_, 'path': full_path }
 	manager.db_insert_get_request(obj)
 
 def file_available_locally(path, file_):
