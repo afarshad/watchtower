@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
 def parse_mpd(file):
 	mpd = mpd_parser.Parser(file)
-	print mpd.medy
+	# print mpd.medy
 
 def db_insert_get_request(obj):
 	gets.insert(obj)
