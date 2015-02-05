@@ -19,11 +19,12 @@ def cb(pkt):
         for h in header_lines:
             if 'get /' in h.lower():
                 get_found = h.split(' ')[1]
+                src_IP=pkt[IP].src
         if get_found:
             for h in header_lines:
                 if 'host: ' in h.lower():
                     host=h.split(":")[1].strip(" ").split("\r\n")[0]
         if get_found:
-            print 'URL:',host+str(get_found)
+            print str(src_IP),'GET URL:',host+str(get_found)
 #sniff(iface=interface, filter='tcp port 80', prn=cb, store=0)
 sniff(filter='tcp port 80', prn=cb, store=0)
