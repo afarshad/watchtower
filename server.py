@@ -47,9 +47,9 @@ def get_file_type(file_):
 		return '.m4s'
 
 def request_for_mpd(host, full_path, file_):
-	#if not file_available_locally(path_to_mpds, file_):
-	get_file(host + full_path)
-	manager.parse_mpd(path_to_mpds + file_)
+	if not file_available_locally(path_to_mpds, file_):
+		get_file(host + full_path)
+		manager.parse_mpd(path_to_mpds + file_)
 
 def get_file(url):
 	file_ = url.split('/')[-1]	
