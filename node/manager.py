@@ -1,5 +1,4 @@
-import server
-import mpd_parser
+from node import mpd_parser, server
 from pymongo import Connection
 
 connection = Connection('localhost', 27017)
