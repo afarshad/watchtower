@@ -1,10 +1,12 @@
 import numpy as np
 import re
+import qoem.node.state.qoemmongodb as databse
+import qoem.lib.opencachelib as lib
 
 class MeasurementEngine(object):
 	_stats=dict()
-	videoQuality=float()
-
+	videoQuality=0.0
+    database=db()
 	def __init__(self):
 		_stats={'min_bitrate': None,
 				'max_bitrate': None,
@@ -17,7 +19,15 @@ class MeasurementEngine(object):
 				'moving_avg_switchingImpact': list(),
 				'videoBitrate': list()
 		}
-		videoQuality=0.0
+        videoQuality=0
+
+
+
+    def update_stats(self,database):
+
+
+
+
 
 
 	def _getVideoQuality(self, video_resolution, video_bitrate):

@@ -17,7 +17,6 @@ import time
 import hashlib
 import configparser
 import qoem.lib.qoemlib as lib
-import qoem.node.server.qoemhttp as server
 import qoem.node.state.qoemmongodb as database
 import zmq
 
@@ -53,10 +52,10 @@ class Node():
         parser.read(config_path)
         self.config = self._create_config_defaults()
         self.config = lib.load_config(self.config, parser)
-        lib.create_directory(self.config["cache_path"] + 'shared')
+        lib.create_directory(self.config["qoem_path"] + 'shared')
         self._logger = lib.setup_logger(self.config["log_path"], TAG, self.config["verbosity"])
         self.database = database.State(self)
-        self._allocate_ports(self.config["port_range"])
+        # TODO find if we need to keep the zmq stuff.
         context = zmq.Context()
         self.ipc_socket = context.socket(zmq.PUB)
         self.ipc_socket.bind("ipc://oc")
@@ -91,7 +90,6 @@ class Node():
         config['node_host'] = '127.0.0.1'
         config['node_port'] = '49002'
         config['notification_port'] = '50001'
-        config['port_range'] = '49003,50000'
         config['controller_host'] = '127.0.0.1'
         config['controller_port'] = '49001'
         config['qoem_path'] = '/var/tmp/qoem/'
@@ -117,12 +115,6 @@ class Node():
         self.print_info(TAG, 'Caught exit signal: exiting qoem node')
         os._exit(1)
 
-    def _allocate_ports(self, port_range):
-        # TODO delete this function
-        """Allocate ports that the node can use for new cache instances."""
-        range_split = port_range.split(',')
-        for port in range(int(range_split[0]), int(range_split[1])):
-            allocated_port_number.append(port)
 
     def _stop(self):
         """Exit gracefully.
@@ -151,43 +143,33 @@ class RemoteProcedureCall():
         try:
             if params["expr"] == '*':
                 for expr in server_dict:
-                    RemoteProcedureCall._pause_server(node, expr)
-                if params["expr"] in server_dict:
-                    RemoteProcedureCall._start_server(node, params["expr"])
-                else:
-                    RemoteProcedureCall._start_new_server(node, params["expr"])
+                    RemoteProcedureCall._pause_sniffer(node, expr)
+                RemoteProcedureCall._start_sniffer(node, params["expr"])
             elif "|" in params["expr"]:
                 for expr in params["expr"].split("|"):
-                    if expr in server_dict:
-                        RemoteProcedureCall._start_server(node, expr)
-                    else:
-                        RemoteProcedureCall._start_new_server(node, expr)
+                    RemoteProcedureCall._start_sniffer(node, expr)
             else:
                 if params["expr"] in server_dict:
-                    RemoteProcedureCall._start_server(node, params["expr"])
-                else:
-                    RemoteProcedureCall._start_new_server(node, params["expr"])
+                    RemoteProcedureCall._start_sniffer(node, params["expr"])
         except lib.RemoteProcedureCallError:
             raise
         return True
 
     @staticmethod
-    def _start_server(node, expr):
+    def _start_sniffer(node, expr):
         """Instruct a single (existing) server to start."""
         root, path = lib.expr_split(expr)
         try:
-            RemoteProcedureCall._send_to_server(node, root, 'start')
-            node.print_info(TAG, "Existing server started with expr: %s" %expr)
+            RemoteProcedureCall._send_to_sniffer(node, root, 'start')
+            node.print_info(TAG, "Start monitoring the server: %s" %expr)
         except Exception as e:
-            node.print_error(TAG, "Error occured with 'start' command for expression '%s': %s" % (expr, e))
+            node.print_error(TAG, "Error occured with 'start' command for monitoring '%s': %s" % (expr, e))
             raise lib.RemoteProcedureCallError(data={'exception' : str(e), 'node_id' : str(node.node_id), 'expr' : str(expr)}, code='-32603')
 
     @staticmethod
-    def _start_new_server(node, expr):
-        """Create a single (new) server.
-
+    def _start_new_sniffer(node, expr):
+        """
         Use next available port to start server process. Store server process and port.
-
         """
         root, path = lib.expr_split(expr)
         try:
@@ -209,11 +191,9 @@ class RemoteProcedureCall():
 
     @staticmethod
     def stop(node, params):
-        """Stop running cache instances.
+        """Stop sniffing traffic.
 
-        Handle the three permutations of expression descriptions (all, list or single). Send each server
-        the 'stop' command to halt operation. Once all servers are stopped, remove the servers from the node.
-
+        Handle the three permutations of expression descriptions (all, list or single).
         """
         try:
             if params["expr"] == '*':
@@ -242,14 +222,14 @@ class RemoteProcedureCall():
 
     @staticmethod
     def _stop_server(node, expr):
-        """Instruct single server to stop.
+        """Instruct sniffer to stop.
 
-        Send stop command and then terminate process. Add port back to those available to new servers.
+        Send stop command and then terminate process.
 
         """
         root, path = lib.expr_split(expr)
         try:
-            RemoteProcedureCall._send_to_server(node, root, 'stop')
+            RemoteProcedureCall._send_to_sniffer(node, root, 'stop')
             time.sleep(0.1)
             server_dict[expr]["process"].terminate()
             port_number_lock.acquire()
@@ -270,23 +250,23 @@ class RemoteProcedureCall():
         try:
             if params["expr"] == '*':
                 for expr in server_dict:
-                    RemoteProcedureCall._pause_server(node, expr)
+                    RemoteProcedureCall._pause_sniffer(node, expr)
             elif "|" in params["expr"]:
                 for expr in params["expr"].split("|"):
-                    RemoteProcedureCall._pause_server(node, expr)
+                    RemoteProcedureCall._pause_sniffer(node, expr)
             else:
                 if params["expr"] in server_dict:
-                    RemoteProcedureCall._pause_server(node, params["expr"])
+                    RemoteProcedureCall._pause_sniffer(node, params["expr"])
         except lib.RemoteProcedureCallError:
             raise
         return True
 
     @staticmethod
-    def _pause_server(node, expr):
+    def _pause_sniffer(node, expr):
         """Instruct single server to pause."""
         root, path = lib.expr_split(expr)
         try:
-            RemoteProcedureCall._send_to_server(node, root, 'pause')
+            RemoteProcedureCall._send_to_sniffer(node, root, 'pause')
             node.print_info(TAG, "Server paused with expr: %s" %expr)
         except Exception as e:
             node.print_error(TAG, "Error occured with 'pause' command for expression '%s': %s" % (expr, e))
@@ -318,61 +298,12 @@ class RemoteProcedureCall():
         """Instruct single server to return statistics to controller."""
         root, path = lib.expr_split(expr)
         try:
-            RemoteProcedureCall._send_to_server(node, root, 'stat')
-            node.print_info(TAG, "Server stat'ed with expr: %s" %expr)
+            RemoteProcedureCall._send_to_sniffer(node, root, 'stat')
+            node.print_info(TAG, "Node stat'ed for stats for the destination: %s" %expr)
         except Exception as e:
             node.print_error(TAG, "Error occured with 'stat' command for expression '%s': %s" % (expr, e))
             raise lib.RemoteProcedureCallError(data={'exception' : str(e), 'node_id' : str(node.node_id), 'expr' : str(expr)}, code='-32603')
 
-    @staticmethod
-    def seed(node, params):
-        """Seed running cache instances.
-
-        Handle the three permutations of expression descriptions (all, list or single).
-
-        """
-        transaction = RemoteProcedureCall._find_transaction(params["expr"])
-        try:
-            for expr in params["expr"].split("|"):
-                RemoteProcedureCall._seed_server(node, expr, transaction)
-        except lib.RemoteProcedureCallError:
-            raise
-        return True
-
-    @staticmethod
-    def _seed_server(node, expr, transaction):
-        root, path = lib.expr_split(expr)
-        object_dict[expr] = transaction
-        try:
-            key = hashlib.sha224(path).hexdigest()
-            path = node.config["cache_path"] + 'shared/' + transaction
-            node.database.create({'key' : key, 'path' : path})
-            node.print_info(TAG, "Server seeded with expression: %s" %expr)
-        except Exception as e:
-            node.print_error(TAG, "Error occured with 'seed' command for expression '%s': %s" % (expr, e))
-            raise lib.RemoteProcedureCallError(data={'exception' : str(e), 'node_id' : str(node.node_id), 'expr' : str(expr)}, code='-32603')
-
-    @staticmethod
-    def fetch(node, params):
-        # TODO delete fetch function
-        threading.Thread(target=RemoteProcedureCall._fetch_object, args=(node, params)).start()
-
-    @staticmethod
-    def _fetch_object(node, params):
-        # TODO delete _fetch_object
-        root, path = lib.expr_split(params['expr'])
-        transaction = RemoteProcedureCall._find_transaction(params['expr'])
-        object_path =  node.config["cache_path"] + 'shared/' + transaction
-        connection = httplib.HTTPConnection(root)
-        connection.request("GET", path)
-        response = connection.getresponse()
-        read_payload = response.read()
-        connection.close()
-        f = open(object_path, 'w')
-        f.write(read_payload)
-        f.close()
-        object_dict[params['expr']] = transaction
-        RemoteProcedureCall.seed(node, params)
 
     @staticmethod
     def _find_transaction(expr):
@@ -382,7 +313,7 @@ class RemoteProcedureCall():
         return os.urandom(28).encode('hex')
 
     @staticmethod
-    def _send_to_server(node, expr, method, path='?', transaction='?'):
+    def _send_to_sniffer(node, expr, method, path='?', transaction='?'):
         node.ipc_socket.send_string("%s %s %s %s" % (expr.decode('ascii'), str(method), path.decode('ascii'), transaction.decode('ascii')))
 
 class JSONServer():
