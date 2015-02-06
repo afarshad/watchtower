@@ -51,5 +51,4 @@ class webserver_thread(threading.Thread):
         app.run()
 
 webserver = webserver_thread()
-webserver.start()while True:
-    sleep(0.1)
+webserver.start()
