@@ -1,5 +1,6 @@
 import mpd_parser
 import sniffer
+from gui import web
 from time import sleep
 from engine import MeasurementEngine
 from pymongo import Connection
