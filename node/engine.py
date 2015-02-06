@@ -19,11 +19,6 @@ class MeasurementEngine(object):
 		}
 		videoQuality=0.0
 
-	def get_playback_bitrate(self, url):
-		"""Parse the URL to unreliably(!) determine the playback bitrate."""
-		pattern = re.compile(ur'.*\_(.*kbit).*')
-		match = re.match(pattern, url)
-		return int(match.group(1).replace('kbit', ''))
 
 	def _getVideoQuality(self, video_resolution, video_bitrate):
 		"""
