@@ -25,7 +25,7 @@ def parse_mpd(file):
 def db_insert_get_request(obj):
 	key = obj['path']
 	key = key.split('/')[-2] + '/' + key.split('/')[-1]
-	new_obj = dict(obj.items() + mpd.medy[key].items())
+	new_obj = dict(obj.items() + mpd.mpd[key].items())
 	bitrate = engine.get_playback_bitrate(new_obj['path'])
 	new_obj['bitrate'] = bitrate
 	gets.insert(new_obj)
