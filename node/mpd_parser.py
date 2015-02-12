@@ -104,7 +104,8 @@ class Parser(object):
 										id_=id_,
 										parent_element=child_element)
 				for segment in segment_list:
-					representation[segment] = parent_element.attrib
+					attributes = dict(parent_element.attrib.items() + {'duration': duration}.items())
+					representation[segment] = attributes
 		base_url.representation = ''
 		return representation
 

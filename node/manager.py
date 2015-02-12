@@ -9,7 +9,6 @@ from pymongo import Connection
 
 connection = Connection('localhost', 27017)
 db = connection['qoems']
-gets = db['get_requests']
 
 sessions = {}
 
@@ -26,15 +25,17 @@ def handle_m4s_request(request):
 	session = sessions[session_identifier]
 
 	key = request.path
-	key = key.split('/')[-2] + '/' +key.split('/')[-1]
+	key = key.split('/')[-2] + '/' + key.split('/')[-1]
 
-	print session.mpd[key]
-	# key = obj['path']
-	# key = key.split('/')[-2] + '/' + key.split('/')[-1]
-	# new_obj = dict(obj.items() + mpd.mpd[key].items())
-	# bitrate = engine.get_playback_bitrate(new_obj['path'])
-	# new_obj['bitrate'] = bitrate
-	# gets.insert(new_obj)
+	entry = dict(request.__dict__.items() + session.mpd[key].items())
+	try:
+		bitrate = MeasurementEngine.get_playback_bitrate(entry['path'])
+		entry['bitrate'] = bitrate 
+	except NameError:
+		pass # MeasurementEngine needs this functionality reimplemented
+
+	client = db[session_identifier]
+	client.insert(entry)
 
 if __name__ == '__main__':
 	sniff = sniffer.sniffing_thread()

@@ -6,7 +6,7 @@ import qoem.lib.opencachelib as lib
 class MeasurementEngine(object):
 	_stats=dict()
 	videoQuality=0.0
-    database=db()
+	database=db()
 	def __init__(self):
 		_stats={'min_bitrate': None,
 				'max_bitrate': None,
@@ -20,15 +20,6 @@ class MeasurementEngine(object):
 				'videoBitrate': list()
 		}
         videoQuality=0
-
-
-
-    def update_stats(self,database):
-
-
-
-
-
 
 	def _getVideoQuality(self, video_resolution, video_bitrate):
 		"""
