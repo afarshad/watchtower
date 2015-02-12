@@ -1,10 +1,12 @@
 import numpy as np
 import re
+import qoem.node.state.qoemmongodb as databse
+import qoem.lib.opencachelib as lib
 
 class MeasurementEngine(object):
 	_stats=dict()
-	videoQuality=float()
-
+	videoQuality=0.0
+    database=db()
 	def __init__(self):
 		_stats={'min_bitrate': None,
 				'max_bitrate': None,
@@ -17,13 +19,16 @@ class MeasurementEngine(object):
 				'moving_avg_switchingImpact': list(),
 				'videoBitrate': list()
 		}
-		videoQuality=0.0
+        videoQuality=0
 
-	def get_playback_bitrate(self, url):
-		"""Parse the URL to unreliably(!) determine the playback bitrate."""
-		pattern = re.compile(ur'.*\_(.*kbit).*')
-		match = re.match(pattern, url)
-		return int(match.group(1).replace('kbit', ''))
+
+
+    def update_stats(self,database):
+
+
+
+
+
 
 	def _getVideoQuality(self, video_resolution, video_bitrate):
 		"""

@@ -39,6 +39,5 @@ def handle_m4s_request(request):
 if __name__ == '__main__':
 	sniff = sniffer.sniffing_thread()
 	sniff.start()
-	
 	while(True):
 		sleep(0.1)
