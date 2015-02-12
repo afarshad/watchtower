@@ -1,11 +1,17 @@
 aniso8601==0.92
 beautifulsoup4==4.3.2
+dnet==1.12
 Flask==0.10.1
 itsdangerous==0.24
 Jinja2==2.7.3
 lxml==3.4.1
 MarkupSafe==0.23
+numpy==1.9.1
+pcapy==0.10.8
+PyFlot==0.2
 pymediainfo==1.4.0
 pymongo==2.8
+PyYAML==3.11
 requests==2.5.1
+scapy==2.3.1
 Werkzeug==0.9.6
