@@ -9,46 +9,54 @@ from pymongo import Connection
 from time import sleep
 
 app = Flask(__name__)
-graphing_data = []
 
 @app.route('/')
 def homepage():
-    return render_template('index.html', graphs=graphing_data)
+	sessions = get_active_sessions()
+	return render_template('index.html', sessions=sessions)
 
 @app.route('/data')
-def return_graphing_data():
-    get_graphing_data()
-    return jsonify({'data': graphing_data})
+def print_sessions():
+	get_session_information()
 
-def get_graphing_data():
-    connection = Connection('localhost', 27017)
-    db = connection['qoems']
-    gets = db['get_requests']
+def get_active_sessions():
+	connection = Connection('localhost', 27017)
+	db = connection['qoems']
 
-    cursor = gets.find()
-    temp_array = []
-    for element in cursor:
-        temp_array.append((element['time'], str(element['bandwidth'])))
-    global graphing_data
-    graphing_data = temp_array
-    connection.close()
+	collections = db.collection_names(include_system_collections=False)
 
-def prepare_graphing_data(buffer_):
-    for metric in report[buffer_]:
-        if metric not in graphs_to_display[buffer_]:
-            continue
-        temp_array = []
-        for idx, val in enumerate(report[buffer_][metric]):
-            temp_array.append((report[buffer_]['time_elapsed'][idx], report[buffer_][metric][idx]))
-        graphing_data[buffer_][metric] = temp_array
+	connection.close()
+	return collections
+
+def get_session_information():
+	connection = Connection('localhost', 27017)
+	db = connection['qoems']
+	sessions = get_active_sessions()
+
+	for session in sessions:
+		client = db[session]
+		cursor = client.find()
+		print '*'*80
+		print session
+		print '*'*80
+		max = 0
+		min = 0
+		for document in cursor:
+			if document['bitrate'] > max:
+				max = document['bitrate']
+			if document['bitrate'] < min:
+				min = document['bitrate']
+		print ('max: ' + str(max) + ' min:' + str(min))
+			
 
 class webserver_thread(threading.Thread):
-    daemon = True
-    def __init__(self):
-        threading.Thread.__init__(self)
+	daemon = True
+	def __init__(self):
+		threading.Thread.__init__(self)
 
-    def run(self):
-        app.run()
+	def run(self):
+		app.run()
 
+get_session_information()
 webserver = webserver_thread()
 webserver.start()

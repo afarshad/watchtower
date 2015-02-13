@@ -77,7 +77,7 @@ def get_file(url):
 			handle.write(block)
 
 def request_for_m4s(request):
-	sys.stdout.write('-> handling m4s')
+	sys.stdout.write('-> handling m4s\n')
 	manager.handle_m4s_request(request)
 
 def file_available_locally(path, file_):
@@ -94,6 +94,3 @@ class sniffing_thread(threading.Thread):
 			#sniff(filter='tcp port 80', prn=packet_capture, store=0)
 		except Exception as e:
 			print 'error: ' + str(e)
-
-		"""Uncomment below if try/except doesn't work"""
-		#sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)

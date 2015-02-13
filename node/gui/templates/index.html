@@ -13,19 +13,28 @@
     <body>
         <div class="container-fluid content">
 
-<!--             <div class="buffer">
-                    <div class="col-sm-6 card">
-                        <div class="body">
-                            <div class="graph" id="my_graph"></div>
-                        </div>
-                    </div>
-            </div> -->
+            <div class="box" id="sessions">
+                <div class="title">Sessions</div>
+                <div class="body">
+                    {% for session in sessions %}
+                        {% if loop.first %}
+                            <span class="selected">{{session}}</span><br/>
+                        {% else %}
+                            {{session}}<br/>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
 
-            <div class="graph" id="my_graph"></div>
+            <div class="box" id="session_info">
+                <div class="title">Session Information</div>
+                <div class="body"></div>
+            </div>
+            
         </div>
 
         <script src="static/jquery.min.js"></script>
         <script src="static/jquery.flot.min.js"></script>
-        <script src="static/graphs.js"></script>
+        <!-- // <script src="static/graphs.js"></script> -->
     </body>
 </html>
