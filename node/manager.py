@@ -32,7 +32,7 @@ def handle_m4s_request(request):
 		bitrate = MeasurementEngine.get_playback_bitrate(entry['path'])
 		entry['bitrate'] = bitrate 
 	except NameError:
-		pass # MeasurementEngine needs this functionality reimplemented
+		pass # MeasurementEngine needs this functionality **reimplemented**
 
 	client = db[session_identifier]
 	client.insert(entry)
