@@ -44,8 +44,38 @@ def handle_m4s_request(request):
 	client = db[session_identifier]
 	client.insert(entry)
 
+def get_active_sessions():
+	connection = Connection('localhost', 27017)
+	db = connection['qoems']
+
+	collections = db.collection_names(include_system_collections=False)
+
+	connection.close()
+	return collections
+
+def get_session_information():
+	connection = Connection('localhost', 27017)
+	db = connection['qoems']
+	sessions = get_active_sessions()
+
+	for session in sessions:
+		client = db[session]
+		cursor = client.find()
+		print '*'*80
+		print session
+		print '*'*80
+		max = 0
+		min = 0
+		for document in cursor:
+			if document['bitrate'] > max:
+				max = document['bitrate']
+			if document['bitrate'] < min:
+				min = document['bitrate']
+		print ('max: ' + str(max) + ' min:' + str(min))
+
 if __name__ == '__main__':
 	sniff = sniffer.sniffing_thread()
 	sniff.start()
 	while(True):
-		sleep(0.1)
+		get_session_information()
+		sleep(1)
