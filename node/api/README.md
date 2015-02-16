@@ -83,13 +83,13 @@ http://127.0.0.1/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=times
 ````json
 {
   "0.0.0.0-http://www-itec.uni-klu.ac.at": [
-    {
-	"timestamp": 1423839108,
-	"file_": "bunny_2s4.m4s"
+	{
+		"timestamp": 1423839108,
+		"file_": "bunny_2s4.m4s"
     },
     {
-    	"timestamp": 1423839109,
-    	"file_": "bunny_2s5.m4s"
+		"timestamp": 1423839109,
+		"file_": "bunny_2s5.m4s"
     }
   ]
 }
