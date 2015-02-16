@@ -2,11 +2,11 @@
 
 Call the API, get data.
 
-#### Sessions
+### Sessions
 
 Get data regarding user sessions
 
-###### List Sessions
+#### List Sessions
 Find all sessions currently being tracked by the application
 
 `URL = HOST + '/api/sessions'`
@@ -20,7 +20,7 @@ Find all sessions currently being tracked by the application
 	  ]
 	}
 
-###### Session Data
+#### Session Data
 Return all data for specific session IDs. Get data for multiple sessions with one query by separating `session_id`s with commas.
 
 `URL = HOST + '/api/sessions/ + session_id`
