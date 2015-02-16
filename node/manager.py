@@ -1,8 +1,8 @@
 import sniffer
-import engine
+# import engine
 import re
 
-from engine import MeasurementEngine
+# from engine import MeasurementEngine
 from mpd_parser import Parser
 from request import Get
 from session import Session
