@@ -1,0 +1,14 @@
+[2015-02-17 11:30:51,261][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:31:06,275][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:31:21,290][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:31:36,306][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:31:51,316][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:32:06,330][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:32:21,346][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:32:36,355][WARNING][state] Could not connect to MongoDB database, retrying in 15 seconds: [Errno 111] Connection refused
+[2015-02-17 11:32:51,377][ERROR][lib] Could not connect to 127.0.0.1:49001: <urlopen error [Errno 111] Connection refused>
+[2015-02-17 11:32:51,378][ERROR][lib] Could not encode JSON: <urlopen error [Errno 111] Connection refused>
+[2015-02-17 11:32:51,378][WARNING][node] Could not connect to controller, retrying in 15 seconds.
+[2015-02-17 11:33:06,394][ERROR][lib] Could not connect to 127.0.0.1:49001: <urlopen error [Errno 111] Connection refused>
+[2015-02-17 11:33:06,395][ERROR][lib] Could not encode JSON: <urlopen error [Errno 111] Connection refused>
+[2015-02-17 11:33:06,395][WARNING][node] Could not connect to controller, retrying in 15 seconds.

@@ -2,7 +2,7 @@
 
 """qoemfloodlight.py - Sends JSON-RPC commands to the Floodlight controller."""
 
-import opencache.lib.opencachelib as lib
+import lib.qoemlib as lib
 import httplib
 import json
 

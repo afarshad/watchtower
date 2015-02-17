@@ -1,9 +1,26 @@
 import calendar
 import math
 import numpy as np
+import threading
 import re
 import time
-from pymongo import Connection
+import state.qoemmongodb as database
+
+class MeasurementEngine_thread(threading.Thread):
+    daemon = True
+    db=databse()
+    def __init__(self,dbName):
+        threading.Thread.__init__(self)
+
+
+    def run(self):
+        try:
+            MeasurementEngine.update_stats(self)
+            time.sleep(1)
+        except Exception as e:
+            print 'error: ' + str(e)
+
+
 
 class MeasurementEngine(object):
 	_stats=dict()

@@ -7,10 +7,10 @@ import optparse
 import os
 
 import configparser
-import qoem.lib.qoemlib as lib
-import qoem.controller.state.qoemmongodb as state
-import qoem.controller.api.qoemjsonrpc as api
-import qoem.controller.request.qoemfloodlight as request_handling
+import lib.qoemlib as lib
+import controller.state.qoemmongodb as state
+import controller.api.qoemjsonrpc as api
+import controller.request.qoemfloodlight as request_handling
 import zmq
 
 TAG = 'controller'

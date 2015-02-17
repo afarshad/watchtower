@@ -7,7 +7,7 @@ import json
 import multiprocessing
 import SocketServer
 
-import opencache.lib.opencachelib as lib
+import lib.qoemlib as lib
 
 TAG = 'api'
 

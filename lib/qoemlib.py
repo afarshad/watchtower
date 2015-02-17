@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7      
 
-"""qoemlib.py: Core QoeM functionality shared between controller and node, taken from OpenCache"""
+"""qoemlib.py: Core QoeM functionality shared between controller and node, taken from qoem"""
 
 import httplib
 import json
@@ -14,7 +14,7 @@ TAG = "lib"
 
 def setup_logger(log_path, name, verbosity):
     """Setup logging functionality to both console and a rotating log file."""
-    logger = logging.getLogger('opencache')
+    logger = logging.getLogger('qoem')
     logger.setLevel(logging.DEBUG)
     create_directory(log_path)
     try:
@@ -59,25 +59,25 @@ def expr_split(expr):
 
 def log_debug(tag, string):
     """Print a formatted error message if verbosity level permits."""
-    logger = logging.getLogger('opencache')
+    logger = logging.getLogger('qoem')
     if int(logger.verbosity) >= 4:
         logger.debug("[" + tag + "] " + string)
 
 def log_info(tag, string):
     """Print a formatted information message if verbosity level permits."""
-    logger = logging.getLogger('opencache')
+    logger = logging.getLogger('qoem')
     if int(logger.verbosity) >= 3:
         logger.info("[" + tag + "] " + string)
 
 def log_warn(tag, string):
     """Print a formatted warning message if verbosity level permits."""
-    logger = logging.getLogger('opencache')
+    logger = logging.getLogger('qoem')
     if int(logger.verbosity) >= 2:
         logger.warn("[" + tag + "] " + string)
 
 def log_error(tag, string):
     """Print a formatted error message if verbosity level permits."""
-    logger = logging.getLogger('opencache')
+    logger = logging.getLogger('qoem')
     if (logger.verbosity) >= 1:
         logger.error("[" + tag + "] " + string)
 

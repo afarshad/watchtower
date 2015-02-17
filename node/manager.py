@@ -1,8 +1,6 @@
 import sniffer
-import engine
 import re
 
-from engine import MeasurementEngine
 from time import sleep
 from mpd_parser import Parser
 from session import Session

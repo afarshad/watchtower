@@ -1,4 +1,6 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
+
+
 
 """node.py: qoem Node - handles requests from the controller to start/stop/pause/stat cache instances."""
 
@@ -16,8 +18,8 @@ import time
 
 import hashlib
 import configparser
-import qoem.lib.qoemlib as lib
-import qoem.node.state.qoemmongodb as database
+import lib.qoemlib as lib
+import state.qoemmongodb as database
 import zmq
 
 TAG = 'node'
@@ -41,7 +43,9 @@ class Node():
 
         Sets up signal handling to deal with interrupts. Loads configuration file, checks validity and creates
         sensible defaults if values missing. Starts loaded modules. Initialises logger to handle output durring
-        running. Creates and binds socket for inter-process communications with server instances. Allocates
+        running.
+        Creates and binds socket for inter-process communications with server instances.
+        Allocates
         potential ports for server instances. Starts continuous communication with controller. Starts JSON server
         ready to receive commands from the controller.
 
@@ -56,9 +60,9 @@ class Node():
         self._logger = lib.setup_logger(self.config["log_path"], TAG, self.config["verbosity"])
         self.database = database.State(self)
         # TODO find if we need to keep the zmq stuff.
-        context = zmq.Context()
-        self.ipc_socket = context.socket(zmq.PUB)
-        self.ipc_socket.bind("ipc://oc")
+        # context = zmq.Context()
+        # self.ipc_socket = context.socket(zmq.PUB)
+        # self.ipc_socket.bind("ipc://oc")
         self._controller_communication = ControllerCommunication(self)
         self._json_server = JSONServer(self)
 
