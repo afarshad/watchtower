@@ -6,6 +6,6 @@
 
 ### Run
 
-`./qoem -n` OR `./qoem =c`
+`./qoem -n` OR `./qoem -c`
 
 `./qoem -h` to see all available options
