@@ -9,7 +9,7 @@ Get data regarding user sessions
 ###### List Sessions
 Find all sessions currently being tracked by the application
 
-`URL = HOST + '/api/sessions'`
+`URL = HOST:8080 + '/api/sessions'`
 
 **Example Response**
 
@@ -23,11 +23,11 @@ Find all sessions currently being tracked by the application
 ###### Session Data
 Return all data for specific session IDs. Get data for multiple sessions with one query by separating `session_id`s with commas.
 
-`URL = HOST + '/api/sessions/ + session_id`
+`URL = HOST:8080 + '/api/sessions/ + session_id`
 
 **Example URL**
 
-http://127.0.0.1/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at
+http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at
 
 **Example Response**
 
@@ -75,7 +75,7 @@ id				| *N/A*
 
 **Example URL**
 
-http://127.0.0.1/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=timestamp,file_
+http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=timestamp,file_
 
 **Example Response**
 
