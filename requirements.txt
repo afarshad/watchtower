@@ -1,6 +1,7 @@
 aniso8601==0.92
 beautifulsoup4==4.3.2
 dnet==1.12
+docopt==0.6.2
 Flask==0.10.1
 itsdangerous==0.24
 Jinja2==2.7.3
