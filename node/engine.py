@@ -12,15 +12,12 @@ class MeasurementEngine_thread(threading.Thread):
     def __init__(self,dbName):
         threading.Thread.__init__(self)
 
-
     def run(self):
         try:
             MeasurementEngine.update_stats(self)
             time.sleep(1)
         except Exception as e:
             print 'error: ' + str(e)
-
-
 
 class MeasurementEngine(object):
 	_stats=dict()
