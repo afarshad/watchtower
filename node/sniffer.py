@@ -55,10 +55,10 @@ def get_file_type(file_):
 		return '.m4s'
 
 def request_for_mpd(request):
-	sys.stdout.write('-> handling mpd')
+	sys.stdout.write('-> handling mpd\n')
 	if not file_available_locally(path_to_mpds, request.file_):
 		get_file(request.host + request.full_path)
-	manager.new_client(path_to_mpds + request.file_, request)
+	manager.handle_mpd_request(path_to_mpds + request.file_, request)
 
 def get_file(url):
 	file_ = url.split('/')[-1]
@@ -90,7 +90,7 @@ class sniffing_thread(threading.Thread):
 
 	def run(self):
 		try:
-			sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
-			#sniff(filter='tcp port 80', prn=packet_capture, store=0)
+			sniff(filter='tcp port 80', prn=packet_capture, store=0)
+			#sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
 		except Exception as e:
 			print 'error: ' + str(e)

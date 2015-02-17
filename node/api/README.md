@@ -23,7 +23,7 @@ Find all sessions currently being tracked by the application
 ###### Session Data
 Return all data for specific session IDs. Get data for multiple sessions with one query by separating `session_id`s with commas.
 
-`URL = HOST:8080 + '/api/sessions/ + session_id`
+`URL = HOST:8080 + '/api/sessions/' + session_id`
 
 **Example URL**
 
