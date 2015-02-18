@@ -6,6 +6,6 @@
 
 ### Run
 
-`./qoem -n` OR `./qoem -c`
+`./start -n` OR `./start -c`
 
-`./qoem -h` to see all available options
+`./start -h` to see all available options
