@@ -1,11 +1,11 @@
 import sniffer
+import api
 import re
 import os
 import requests
 from time import sleep
 from mpd_parser import Parser
 from session import Session
-from api import api
 from pymongo import Connection
 
 connection = Connection('localhost', 27017)
@@ -66,6 +66,9 @@ def handle_m4s_request(request):
 if __name__ == '__main__':
 	sniff = sniffer.sniffing_thread()
 	sniff.start()
+
+	api = api.api_thread()
+	api.start()
 
 	while(1):
 		sleep(0.1)
