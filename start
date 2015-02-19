@@ -3,7 +3,8 @@
 import argparse
 import sys
 import yaml
-from qoem.node import manager
+from watchtower.node import manager
+
 config = {}
 
 parser = argparse.ArgumentParser()

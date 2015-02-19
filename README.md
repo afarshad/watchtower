@@ -1,4 +1,4 @@
-# QOEM (we need a new project name)
+# Watchtower
 
 ### Installation
 

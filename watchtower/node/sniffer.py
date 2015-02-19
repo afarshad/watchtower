@@ -53,7 +53,6 @@ def get_file_type(file_):
 		return '.m4s'
 
 def request_for_mpd(request):
-	import mpd_parser
 	sys.stdout.write('-> handling mpd\n')
 	manager.handle_mpd_request(request)
 
@@ -66,7 +65,7 @@ class sniffing_thread(threading.Thread):
 	def __init__(self, _manager):
 		global manager
 		manager = _manager
-		self.debug()
+		#self.debug()
 		threading.Thread.__init__(self)
 
 	def run(self):
