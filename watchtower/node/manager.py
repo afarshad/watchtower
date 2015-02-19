@@ -3,6 +3,8 @@ import api
 import re
 import os
 import requests
+
+from watchtower import config
 from time import sleep
 from mpd_parser import Parser
 from session import Session
@@ -21,7 +23,7 @@ class Manager(object):
 
 		_api = api.api_thread()
 		_api.start()
-
+		
 		while(1):
 			sleep(0.1)
 

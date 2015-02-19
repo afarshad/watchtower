@@ -1,5 +1,6 @@
 import threading
 
+from watchtower import config
 from pymongo import Connection
 from bson.json_util import dumps
 from flask import Flask, url_for, jsonify, request
@@ -49,4 +50,4 @@ class api_thread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		app.run(host='0.0.0.0', port=8080)
+		app.run(host=config.api['host'], port=config.api['port'])

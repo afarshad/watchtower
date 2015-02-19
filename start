@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python 
 
 import argparse
 import sys
 import yaml
-from watchtower.node import manager
 
-config = {}
+from watchtower import config
+from watchtower.node import manager
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -26,7 +26,10 @@ if not args.config:
 	sys.exit(1)
 else:
 	with open(args.config, 'r') as f:
-		config = {}
+		_config = yaml.load(f)
+		for key in _config:
+			setattr(config, key, _config[key])
+
 
 if args.node:
 	_manager = manager.Manager()
