@@ -8,67 +8,66 @@ from mpd_parser import Parser
 from session import Session
 from pymongo import Connection
 
-connection = Connection('localhost', 27017)
-db = connection['qoems']
+class Manager(object):
+	connection = Connection('localhost', 27017)
+	db = connection['qoems']
+	
+	sessions = {}
+	path_to_mpds = 'mpds/'
 
-sessions = {}
-path_to_mpds = 'mpds/'
+	def __init__(self):
+		sniff = sniffer.sniffing_thread(self)
+		sniff.start()
 
-def handle_mpd_request(request):
-	if not file_available_locally(path_to_mpds, request.file_):
-		get_file(request.host + request.path)
-	new_client(path_to_mpds + request.file_, request)
+		_api = api.api_thread()
+		_api.start()
 
-def file_available_locally(path, file_):
-	if not os.path.exists(path):
-		os.makedirs(path)
-	return os.path.isfile(path + file_)
+		while(1):
+			sleep(0.1)
 
-def get_file(url):
-	file_ = url.split('/')[-1]
+	def handle_mpd_request(self, request):
+		if not self.file_available_locally(self.path_to_mpds, request.file_):
+			self.get_file(request.host + request.path)
+		self.new_client(self.path_to_mpds + request.file_, request)
 
-	with open(path_to_mpds + file_, 'wb') as handle:
-		if not "http" in url:
-			url = 'http://' + url
-		response = requests.get(url, verify=False, allow_redirects=True, stream=True)
+	def file_available_locally(self, path, file_):
+		if not os.path.exists(path):
+			os.makedirs(path)
+		return os.path.isfile(path + file_)
 
-		if not response.ok:
-			return
+	def get_file(self, url):
+		file_ = url.split('/')[-1]
 
-		for block in response.iter_content(1024):
-			if not block:
-				break
-			handle.write(block)
+		with open(self.path_to_mpds + file_, 'wb') as handle:
+			if not "http" in url:
+				url = 'http://' + url
+			response = requests.get(url, verify=False, allow_redirects=True, stream=True)
 
-def new_client(local_mpd, request):
-	parser = Parser(local_mpd)
-	mpd = parser.mpd
-	session = Session(mpd, request.timestamp)
-	global sessions
-	session_identifier = str(request.src_ip) + '-' + str(request.host)
-	sessions[session_identifier] = session
+			if not response.ok:
+				return
 
-def handle_m4s_request(request):
-	session_identifier = str(request.src_ip) + '-' + str(request.host)
-	session = sessions[session_identifier]
+			for block in response.iter_content(1024):
+				if not block:
+					break
+				handle.write(block)
 
-	key = request.path
-	key = key.split('/')[-2] + '/' + key.split('/')[-1]
+	def new_client(self, local_mpd, request):
+		parser = Parser(local_mpd)
+		mpd = parser.mpd
+		session = Session(mpd, request.timestamp)
+		session_identifier = str(request.src_ip) + '-' + str(request.host)
+		self.sessions[session_identifier] = session
 
-	entry = dict(request.__dict__.items() + session.mpd[key].items())
-	# bitrate = get_playback_bitrate(entry['path'])
-	# entry['bitrate'] = bitrate 
+	def handle_m4s_request(self, request):
+		session_identifier = str(request.src_ip) + '-' + str(request.host)
+		session = self.sessions[session_identifier]
 
-	client = db[session_identifier]
-	client.insert(entry)
+		key = request.path
+		key = key.split('/')[-2] + '/' + key.split('/')[-1]
 
+		entry = dict(request.__dict__.items() + session.mpd[key].items())
+		# bitrate = get_playback_bitrate(entry['path'])
+		# entry['bitrate'] = bitrate 
 
-if __name__ == '__main__':
-	sniff = sniffer.sniffing_thread()
-	sniff.start()
-
-	api = api.api_thread()
-	api.start()
-
-	while(1):
-		sleep(0.1)
+		client = self.db[session_identifier]
+		client.insert(entry)

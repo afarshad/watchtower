@@ -1,14 +1,15 @@
 import threading
 import os
-import manager
 import logging
 import requests
-import manager
 import calendar
 import sys
 import request
+import time
 
-from scapy.all import *
+from scapy.all import packet, sniff
+
+manager = None
 
 def packet_capture(packet):
 	get_found = str()
@@ -52,6 +53,7 @@ def get_file_type(file_):
 		return '.m4s'
 
 def request_for_mpd(request):
+	import mpd_parser
 	sys.stdout.write('-> handling mpd\n')
 	manager.handle_mpd_request(request)
 
@@ -61,18 +63,21 @@ def request_for_m4s(request):
 
 class sniffing_thread(threading.Thread):
 	daemon = True
-	def __init__(self):
+	def __init__(self, _manager):
+		global manager
+		manager = _manager
+		self.debug()
 		threading.Thread.__init__(self)
 
 	def run(self):
 		try:
-			sniff(filter='tcp port 80', prn=packet_capture, store=0)
-			#sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
+			sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
 		except Exception as e:
 			print 'error: ' + str(e)
+			sys.exit(1)
 
-handle_get_request(request.Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd'))
-#get_file('www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd')
-#request_for_mpd(Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at/', 'ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd'))
-#request_for_m4s(Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at/', 'ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/bunny_2s_8000kbit/bunny_2s4.m4s', 'bunny_2s4.m4s'))
-#request_for_m4s(Get('0.0.0.0', 'http://www-itec.uni-klu.ac.at/', 'bunny_2s_50kbit/bunny_2s10.m4s', 'bunny_2s10.m4s'))
+	def debug(self):
+		handle_get_request(request.Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at', '/ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd', 'BigBuckBunny_2s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd'))
+		handle_get_request(request.Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at', 'ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/bunny_2s_8000kbit/bunny_2s4.m4s', 'bunny_2s4.m4s'))
+		time.sleep(1)
+		handle_get_request(request.Get(calendar.timegm(time.gmtime()), '0.0.0.0', 'http://www-itec.uni-klu.ac.at', 'ftp/datasets/mmsys12/BigBuckBunny/bunny_2s/bunny_2s_8000kbit/bunny_2s5.m4s', 'bunny_2s4.m4s'))

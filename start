@@ -2,6 +2,9 @@
 
 import argparse
 import sys
+import yaml
+from qoem.node import manager
+config = {}
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -9,17 +12,20 @@ group.add_argument("-n", "--node", help="Run this instance as a node",
 					action="store_true")
 group.add_argument("-c", "--controller", help="Run this instance as a controller",
 					action="store_true")
-parser.add_argument("-p", "--api_port", help="Specify port API will bind to",
-					type=int, default=8080)
-parser.add_argument("-a", "--api_address", help="Specify address API will bind to",
-					type=str, default='0.0.0.0')
-parser.add_argument("-P", "--gui_port", help="Specify port GUI will bind to",
-					type=int, default=80)
-parser.add_argument("-A", "--gui_address", help="Specify address GUI will bind to",
-					type=str, default='0.0.0.0')
+parser.add_argument("--config", help="Config file")
 
 args = parser.parse_args()
 
 if not args.node and not args.controller:
 	print 'Specify if this instance is a controller or node'
 	sys.exit(1)
+
+if not args.config:
+	print 'Provide a yaml formatted config file'
+	sys.exit(1)
+else:
+	with open(args.config, 'r') as f:
+		config = {}
+
+if args.node:
+	_manager = manager.Manager()
