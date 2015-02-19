@@ -3,6 +3,8 @@ import api
 import re
 import os
 import requests
+import json
+import engine
 
 from watchtower import config
 from time import sleep
@@ -23,9 +25,10 @@ class Manager(object):
 
 		_api = api.api_thread()
 		_api.start()
-		
+
 		while(1):
-			sleep(0.1)
+			self.get_data()
+			sleep(5)
 
 	def handle_mpd_request(self, request):
 		if not self.file_available_locally(self.path_to_mpds, request.file_):
@@ -53,6 +56,24 @@ class Manager(object):
 					break
 				handle.write(block)
 
+	def send_data_to_engine(self):
+		""" API return values are bit skewed, this method can look a lot
+		cleaner once the API issues have been ammended"""
+		r = requests.get('http://' + config.api['host'] + ':' + str(config.api['port']) + '/api/sessions')
+		sessions = json.loads(r.text)
+
+		listy = []
+		for session in sessions:
+			for thing in sessions[session]:
+				print thing
+				r = requests.get('http://' + config.api['host'] + ':' + str(config.api['port']) + '/api/sessions/' + thing + '?fields=timestamp,duration,bitrate,width,height')
+				entries = json.loads(r.text)
+				for entry in entries:
+					for data in entries[entry]:
+						listy.append(data)
+		engine.handle_this_method_call(listy)
+
+
 	def new_client(self, local_mpd, request):
 		parser = Parser(local_mpd)
 		mpd = parser.mpd
@@ -68,8 +89,15 @@ class Manager(object):
 		key = key.split('/')[-2] + '/' + key.split('/')[-1]
 
 		entry = dict(request.__dict__.items() + session.mpd[key].items())
-		# bitrate = get_playback_bitrate(entry['path'])
-		# entry['bitrate'] = bitrate 
+		bitrate = self.get_playback_bitrate(entry['path'])
+		entry['bitrate'] = bitrate 
 
 		client = self.db[session_identifier]
 		client.insert(entry)
+
+	def get_playback_bitrate(self, url):
+		"""Parse the URL to unreliably(!) determine the playback bitrate."""
+		pattern = re.compile(ur'.*\_(.*kbit).*')
+		match = re.match(pattern, url)
+		bitrate = int(match.group(1).replace('kbit', ''))
+		return bitrate or 0
