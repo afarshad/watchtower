@@ -27,7 +27,7 @@ class Manager(object):
 		_api.start()
 
 		while(1):
-			self.get_data()
+			self.send_data_to_engine()
 			sleep(5)
 
 	def handle_mpd_request(self, request):
