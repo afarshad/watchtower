@@ -98,3 +98,23 @@ http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=
   ]
 }
 ````
+
+**Newest only**
+
+Append `mostRecent=True` to your URL to get the single most recent record for each session
+
+**Example URL**
+
+http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=timestamp,bitrate&mostRecent=True'
+
+**Example Response**
+````json
+{
+  "0.0.0.0-http://www-itec.uni-klu.ac.at": [
+    {
+      "timestamp": 1424445625,
+      "bitrate": 8000
+    }
+  ]
+}
+````

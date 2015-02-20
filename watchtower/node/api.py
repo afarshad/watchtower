@@ -2,7 +2,7 @@ import threading
 
 from watchtower import config
 from watchtower.lib import database
-from pymongo import Connection
+import pymongo
 from bson.json_util import dumps
 from flask import Flask, url_for, jsonify, request
 
@@ -29,6 +29,14 @@ def api_specific_sessions(id_):
 		for field in fields:
 			projection[field] = 1
 
+	most_recent = request.args.get('mostRecent')
+	if most_recent:
+		limit = 1
+		sort_order = pymongo.DESCENDING
+	else:
+		limit = 0
+		sort_order = pymongo.ASCENDING
+
 	collections = get_collections()
 
 	response = {}
@@ -36,7 +44,8 @@ def api_specific_sessions(id_):
 		if session in collections:
 			response[session] = list()
 			client = db[session]
-			for document in client.find({}, projection):
+			print request.args
+			for document in client.find({}, projection, limit=limit).sort('timestamp', sort_order):
 				response[session].append(document)
 
 	return dumps(response)
