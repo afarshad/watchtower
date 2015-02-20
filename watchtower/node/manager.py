@@ -7,15 +7,15 @@ import json
 import engine
 
 from watchtower import config
+from watchtower.lib import database
 from time import sleep
 from mpd_parser import Parser
 from session import Session
 from pymongo import Connection
 
 class Manager(object):
-	connection = Connection('localhost', 27017)
-	db = connection['qoems']
-	
+	db = database.open_connection()
+
 	sessions = {}
 	path_to_mpds = 'mpds/'
 

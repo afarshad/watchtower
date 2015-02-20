@@ -5,7 +5,6 @@ import sys
 import yaml
 
 from watchtower import config
-from watchtower.node import manager
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -29,7 +28,9 @@ else:
 		_config = yaml.load(f)
 		for key in _config:
 			setattr(config, key, _config[key])
+print dir(config)
 
 
 if args.node:
+	from watchtower.node import manager
 	_manager = manager.Manager()

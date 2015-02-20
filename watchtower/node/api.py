@@ -1,13 +1,13 @@
 import threading
 
 from watchtower import config
+from watchtower.lib import database
 from pymongo import Connection
 from bson.json_util import dumps
 from flask import Flask, url_for, jsonify, request
 
 app = Flask(__name__)
-connection = Connection('localhost', 27017)
-db = connection['qoems']
+db = database.open_connection()
 
 @app.route('/')
 def api_root():
