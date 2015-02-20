@@ -58,7 +58,7 @@ http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at
 }
 ````
 
-**Optional Fields**
+##### Optional Fields
 
 It's possible to retrieve only the fields that are useful for your application by using the "fields" query string parameter.
 
@@ -99,7 +99,7 @@ http://127.0.0.1:8080/api/sessions/0.0.0.0-http://www-itec.uni-klu.ac.at?fields=
 }
 ````
 
-**Newest only**
+##### Newest only
 
 Append `mostRecent=True` to your URL to get the single most recent record for each session
 
