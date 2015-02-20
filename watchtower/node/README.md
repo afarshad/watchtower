@@ -11,6 +11,10 @@ Find all sessions currently being tracked by the application
 
 `URL = HOST:PORT + '/api/sessions'`
 
+**Example URL**
+
+http://127.0.0.1:8080/api/sessions
+
 **Example Response**
 ````json
 {
