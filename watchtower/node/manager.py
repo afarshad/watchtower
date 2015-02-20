@@ -57,21 +57,17 @@ class Manager(object):
 				handle.write(block)
 
 	def send_data_to_engine(self):
-		""" API return values are bit skewed, this method can look a lot
-		cleaner once the API issues have been ammended"""
 		r = requests.get('http://' + config.api['host'] + ':' + str(config.api['port']) + '/api/sessions')
-		sessions = json.loads(r.text)
+		response = json.loads(r.text)
 
-		listy = []
-		for session in sessions:
-			for thing in sessions[session]:
-				print thing
-				r = requests.get('http://' + config.api['host'] + ':' + str(config.api['port']) + '/api/sessions/' + thing + '?fields=timestamp,duration,bitrate,width,height')
-				entries = json.loads(r.text)
-				for entry in entries:
-					for data in entries[entry]:
-						listy.append(data)
-		engine.handle_this_method_call(listy)
+		for session in response['sessions']:
+			r = requests.get('http://' + config.api['host'] + ':' + str(config.api['port']) + '/api/sessions/' + session + '?fields=timestamp,duration,bitrate,width,height')
+			entries = json.loads(r.text)
+			data = []
+			for entry in entries:
+				for document in entries[entry]:
+					data.append(document)
+			engine.handle_this_method_call(data)
 
 
 	def new_client(self, local_mpd, request):
