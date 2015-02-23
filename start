@@ -20,16 +20,18 @@ if not args.node and not args.controller:
 	print 'Specify if this instance is a controller or node'
 	sys.exit(1)
 
-if not args.config:
-	print 'Provide a yaml formatted config file'
-	sys.exit(1)
+if args.node:
+	config._setup_node_defaults()
 else:
+	config._setup_controller_defaults()
+
+if args.config:
 	with open(args.config, 'r') as f:
 		_config = yaml.load(f)
 		for key in _config:
-			setattr(config, key, _config[key])
-print dir(config)
-
+			_dict = getattr(config, key)
+			_dict.update(_config[key])
+			setattr(config, key, _dict)
 
 if args.node:
 	from watchtower.node import manager
