@@ -2,17 +2,17 @@
 
 """ Parse MPDS """
 
-from lxml import etree
 import aniso8601
 import os
 import Queue
 import random
 import re
-import requests
 import threading
 import time
 import multiprocessing
-import pprint
+
+import requests
+from lxml import etree
 from pymediainfo import MediaInfo
 
 class Parser(object):

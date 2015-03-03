@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+
 import yaml
 
 from watchtower import config

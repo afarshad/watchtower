@@ -1,17 +1,18 @@
-import sniffer
-import api
 import re
 import os
 import requests
 import json
-import engine
-
-from watchtower import config
-from watchtower.lib import database
 from time import sleep
+
+from pymongo import Connection
+
+import sniffer
+import api
+import engine
 from mpd_parser import Parser
 from session import Session
-from pymongo import Connection
+from watchtower import config
+from watchtower.lib import database
 
 class Manager(object):
 	db = database.open_connection()

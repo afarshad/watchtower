@@ -1,10 +1,11 @@
 import threading
 
-from watchtower import config
-from watchtower.lib import database
 import pymongo
 from bson.json_util import dumps
 from flask import Flask, url_for, jsonify, request
+
+from watchtower import config
+from watchtower.lib import database
 
 app = Flask(__name__)
 db = database.open_connection()
