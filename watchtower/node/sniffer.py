@@ -6,8 +6,9 @@ import sys
 import time
 
 import requests
-from scapy.all import packet, sniff
-
+#from scapy.all import packet, sniff
+from scapy.all import *
+from watchtower import config
 import request
 
 manager = None
@@ -71,7 +72,7 @@ class sniffing_thread(threading.Thread):
 
 	def run(self):
 		try:
-			sniff(iface="eth2.1000", filter='tcp port 80', prn=packet_capture, store=0)
+			sniff(iface=config.sniffer['ifname'], filter=string(config.sniffer['protocol'])+" port "+string(config.sniffer['port']) , prn=packet_capture, store=0)
 		except Exception as e:
 			print 'error: ' + str(e)
 			sys.exit(1)
