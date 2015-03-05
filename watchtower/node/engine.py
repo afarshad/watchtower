@@ -84,6 +84,32 @@ def calc_minVideoBitrate(_stats):
         _minBitrate = 0
     return _minBitrate
 
+def calc_maxVideoBitrate(_stats):
+    """
+
+    :param _stats: It is the list of parameters passed to calculate stats
+    :return: maximum video bitrate in the list
+    """
+    if len(_stats) > 0:
+        _maxBitrate= max(_stats[:]['bitrate'])
+    else:
+        _maxBitrate = 0
+    return _maxBitrate
+
+def _getNoBitrateChanges(_stats):
+    """
+    :param _stats:
+    :return: the number of changes in the video bitrate."""
+
+    """
+
+    prev = self._status['videoBitrate'][0]
+    count = 0
+    for item in self._status['videoBitrate'][1:]:
+        if not item == prev:
+            count += 1
+        prev = item
+    return count
 
 
 # 	def _calcSwitchingImpact(self,start_time,curr_time,vq_before,vq_after):
@@ -131,13 +157,3 @@ def calc_minVideoBitrate(_stats):
 # 			self._stats['switchingImpact']=list(final_data)
 
 
-# 	def _getNoBitrateChanges(self):
-# 		"""Count the number of changes in the list."""
-
-# 		prev = self._status['videoBitrate'][0]
-# 		count = 0
-# 		for item in self._status['videoBitrate'][1:]:
-# 			if not item == prev:
-# 				count += 1
-# 			prev = item
-# 		return count

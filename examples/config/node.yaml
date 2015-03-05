@@ -8,3 +8,8 @@ database:
   name: watchtower_node
   host: localhost
   port: 27017
+sniffer:
+  ifname: h3-eth0
+  protocol: tcp
+  port: 80
+		 
