@@ -113,7 +113,14 @@ def get_noBitrateChanges(_stats):
             count += 1
             prev = _stats[i]['bitrate']
     return count
+def test_get_noBitrateChanges(_stats):
+    """
 
+    :param _stats:
+    :return: test the get_noBitrateChanges function
+    """
+    _noBitrateChanges=get_noBitrateChanges(_stats)
+    print "Number of Bitrate Changes is:" + str(_noBitrateChanges)
 
 def calc_weightedAvgBitrate(_stats):
     """
@@ -124,10 +131,9 @@ def calc_weightedAvgBitrate(_stats):
     """
     _avgBitrate = 0
     _sumBitrate = 0
-    _totalTime = _stats[-1]['videoTime'] - _stats[0]['videoTime']
+    _totalTime = long(_stats[-1]['videoTime']) - long(_stats[0]['videoTime'])
     for i in range(0, len(_stats)-1):
-        _sumBitrate += (_stats[i+1]['videoTime']-_stats[i]['videoTime'])*_stats[i]['bitrate']
-
+        _sumBitrate += (long(_stats[i+1]['videoTime'])-long(_stats[i]['videoTime']))*int(_stats[i]['bitrate'])
     _avgBitrate=_sumBitrate/_totalTime
     return _avgBitrate  # def _calcSwitchingImpact(self,start_time,curr_time,vq_before,vq_after):
 
@@ -139,18 +145,31 @@ def test_calc_weightedAvgBitrate(_stats):
     """
     _stats_w_videoTime=add_videoTime(_stats)
     _wAvgBitrate=calc_weightedAvgBitrate(_stats_w_videoTime)
-    print _wAvgBitrate
+    print "Weighted Average Bitrate is:" + str(_wAvgBitrate)
 
+def calc_switchingImpact(startTime,currentTime,vq0,vq1):
+    """
 
+    :param startTime: start time stamp for the switching from vq0 bitrate to vq1 bitrate
+    :param currentTime: current time for the video playback
+    :param vq0: video quality before switching
+    :param vq1: video quality after switching
+    :return: switching impact for the current change in bitrate
+    (note, calculated switching impact is only for this change and need to sum up with switching impact values for
+    other video bitrate switches"
+    """
+    _si=np.absolute(vq1 - vq0)*np.exp(-0.015*(currentTime - startTime))
+    return _si
 
-# 		""" It returns the impact factor given
-# 		the start time stamp for the switching,
-# 		current time of the video playing(time),
-# 		video quality before switching (vq_before)
-# 		and video quality after switching (vq_after)."""
-# 		return(np.absolute(vq_after-vq_before)*np.exp(-0.015*(curr_time-start_time)))
+def calc_totalSwitchingImpact(_stats,currentTime):
+    """
 
-# 	def _updateSwitchingImpact(self,currentTime):
+    :param _stats: List of stats with the video Time.
+    :param currentTime: current video Time.
+    :return: calculate the total switching impact considering all previous changes until the currentTime.
+    """
+    _totalSI=0.0
+    return _totalSI
 
 # 		br_data=self._stats['videoBitrate']
 # 		sw_index=[]
