@@ -45,7 +45,7 @@ def api_specific_sessions(id_):
 		if session in collections:
 			response[session] = list()
 			client = db[session]
-			print request.args
+			# print request.args
 			for document in client.find({}, projection, limit=limit).sort('timestamp', sort_order):
 				response[session].append(document)
 
